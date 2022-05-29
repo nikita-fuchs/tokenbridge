@@ -64,7 +64,7 @@ export class ContractService {
   }
 
 
-  transferEther(originAccount, destinyAccount, amount) {
+  transferEther(originAccount, targetAccount, amount) {
 
     return new Promise((resolve, reject) => {
       var contract = require("@truffle/contract"); // acceso a nueva version de libreria
@@ -73,8 +73,8 @@ export class ContractService {
       paymentContract.deployed().then((instance) => {
         let finalAmount =  this.web3.utils.toBN(amount)
         console.log(finalAmount)
-        return instance.nuevaTransaccion(
-          destinyAccount,
+        return instance.newTransaction(
+          targetAccount,
           {
             from: originAccount[0],
             value: this.web3.utils.toWei(finalAmount, 'ether')

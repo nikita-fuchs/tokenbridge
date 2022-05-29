@@ -11,7 +11,7 @@ contract Payment {
 
     event TransferirMonto(address payable _destinoTransferencia, address _origenTransferencia, uint montoTransferencia);
     
-    function nuevaTransaccion(address payable _destinoTransferencia) public payable returns (bool){
+    function newTransaction(address payable _destinoTransferencia) public payable returns (bool){
         destinoTransferencia = _destinoTransferencia;
         destinoTransferencia.transfer(msg.value);
         emit TransferirMonto(destinoTransferencia, origenTransferencia, msg.value);
