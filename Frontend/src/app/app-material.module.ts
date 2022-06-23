@@ -14,6 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSpinner } from '@angular/material/progress-spinner';
+import { DirectivesModule } from "src/app/directives/directives.module";
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { MatSpinner } from '@angular/material/progress-spinner';
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
+    DirectivesModule
   ],
   exports: [
     LayoutModule,
@@ -46,6 +48,7 @@ import { MatSpinner } from '@angular/material/progress-spinner';
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
+    DirectivesModule
   ],
 })
 export class AppMaterialModule { }

@@ -1,3 +1,6 @@
+devnotes: start ganache with 
+`ganache --mnemonic="gate man immense path adult develop color remove belt foot year future"`
+
 # Angulartruffledapp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.1.

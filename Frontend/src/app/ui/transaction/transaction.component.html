@@ -1,9 +1,43 @@
-<div class="body">
+<div  *ngIf="this.contract.accounts" class="body">
 
-    <mat-card class="account">
+  <mat-card>
+    <mat-card-title toEtherscan>Contract Address</mat-card-title>
+    <mat-card-subtitle>Of the bridge contract</mat-card-subtitle>
+    <p toEtherscan>{{contract.instance?.address}} </p>
+    <mat-card-actions align="end">
+      <!-- <button mat-button>Open on Etherscan</button> -->
+    </mat-card-actions>
+  </mat-card>
+
+<br>
+<mat-card *ngFor="let admin of contract.contractState; let i = index" >
+  <mat-card-title > <ng-container  *ngIf="admin.address == this.contract.accounts[0]">  <mat-icon matSuffix>person</mat-icon> </ng-container> Admin {{ i + 1}}  <ng-container *ngIf="admin.address == this.contract.accounts[0]"> (active account) </ng-container> </mat-card-title>
+  <mat-card-subtitle toEtherscan>{{admin.address}} </mat-card-subtitle>
+
+  <div *ngIf="contract.defaultSignatures.includes(admin.currentSignature); else elseBlock"> 
+    <p  style="display: inline;"> Polling contract for signature..   </p> <mat-icon matSuffix class="rotating">cached</mat-icon> 
+  </div>
+  <ng-template #elseBlock> <div> Current signature: {{admin.currentSignature}} </div> </ng-template>
+
+  <mat-card-actions align="end">
+    <!-- <button mat-button>Open on Etherscan</button> -->
+    <!-- <fa-icon [icon]="[ratingEmojis.left, 'grin-squint']" size="6x" ></fa-icon> -->
+  </mat-card-actions>
+</mat-card>
+<!-- <mat-card *ngFor="let admin of contract.contractState; let i = index" >
+  <mat-card-title toEtherscan>Admin {{ i + 1}}</mat-card-title>
+  <mat-card-subtitle>placeholder</mat-card-subtitle>
+  <p toEtherscan>{{admin.address}} </p>
+  <mat-card-actions align="end">
+  </mat-card-actions>
+</mat-card>
+ -->
+  <br>
+
+    <mat-card class="textCenter account">
         <form [formGroup]="transactionForm" (ngSubmit)="sendEth($event)">
             <mat-form-field appearance="outline">
-                <mat-label>Destination Account</mat-label>
+                <mat-label>Recipient's ETH wallet</mat-label>
                 <input matInput placeholder="Placeholder" formControlName="sendaddress">
                 <mat-icon matSuffix>account_balance_wallet</mat-icon>
                 <mat-hint></mat-hint>
@@ -11,14 +45,24 @@
               &nbsp;
               <mat-form-field appearance="outline">
                 <mat-label>Amount</mat-label>
-                <input matInput type="number" min=0 placeholder="Placeholder" formControlName="amount">
-                <mat-icon matSuffix>attach_money</mat-icon>
+                <input matInput type="number" min=1 placeholder="Placeholder" formControlName="amount">
+                <mat-icon matSuffix>toll</mat-icon>
                 <mat-hint></mat-hint>
               </mat-form-field>
         </form>
+        
+      <div *ngIf="transactionForm.get('sendaddress').errors?.malformattedAddress" 
+          class="invalid-feedback">
+          Sorry, something about the address you entered ({{transactionForm.get('sendaddress').errors?.malformattedAddress}}) is wrong.
+      </div>
+      <div *ngIf="this.transactionForm.get('sendaddress').valid" 
+          class="invalid-feedback">
+         Entered ETH address has valid format.
+      </div>
+
         &nbsp;
         <div class="button-container">
-          <button mat-raised-button color="accent" [disabled]="!transactionForm.valid" (click)="sendEth($event)"><mat-icon *ngIf="!transactionForm.valid">lock</mat-icon><mat-icon *ngIf="transactionForm.valid">input</mat-icon>&nbsp;Transfer Ether</button>
+          <button mat-raised-button color="accent" [disabled]="!transactionForm.valid" (click)="sendEth($event)"><mat-icon *ngIf="!transactionForm.valid">lock</mat-icon><mat-icon *ngIf="transactionForm.valid">input</mat-icon>&nbsp;Send Transaction</button>
           &nbsp;
         </div>
         &nbsp;

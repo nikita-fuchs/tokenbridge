@@ -27,12 +27,6 @@ export class AccountComponent {
       .then((value: any) => {
         this.direction = value;
         this.getDetails(this.direction);
-       /* this.profile = this.threebox.getProfile(this.direction).then((response) => {
-            console.log(response);
-            this.profile = response;
-            this.url = this.profile.image[0].contentUrl["/"];
-          }); 
-        this.getImage(this.direction);*/
       })
       .catch((error: any) => {
         this.contract.failure(
@@ -41,17 +35,6 @@ export class AccountComponent {
       });
   }
 
-  /*getImage(account) {
-    this.data = this.sanitizer.bypassSecurityTrustResourceUrl(
-      "data:image/svg+xml; utf8," +
-      encodeURI(
-        new Identicon(Md5.hashStr(account), {
-          size: 32,
-          format: "svg",
-        }).toString(true)
-      )
-    );
-  }*/
 
   navigateTo() {
     window.open("https://metamask.io/");

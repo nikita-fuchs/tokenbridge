@@ -1,11 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
+  ValidatorFn,
   Validators,
 } from "@angular/forms";
 import { ContractService } from "src/app/services/contract/contract.service";
+import { DirectivesModule } from "src/app/directives/directives.module";
+
 
 @Component({
   selector: "app-transaction",
@@ -18,9 +22,9 @@ export class TransactionComponent implements OnInit {
   direction: any;
   transactionForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private contract: ContractService) {
+  constructor(private fb: FormBuilder, public contract: ContractService) {
     this.transactionForm = new FormGroup({
-        sendaddress: new FormControl("", [Validators.required]),
+        sendaddress: new FormControl("", [Validators.required, this.ethAddressRegexCheck()]),
         amount: new FormControl("", [Validators.required]),
       });
 
@@ -39,6 +43,7 @@ export class TransactionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.transactionForm.get("sendaddress").valid
     this.transactionForm.valueChanges.subscribe((x) => {
     });
   }
@@ -59,4 +64,24 @@ export class TransactionComponent implements OnInit {
         this.contract.failure("Transaction failed");
       });
   }
+
+
+  ethAddressRegexCheck(): ValidatorFn {
+    return (control:AbstractControl) : { [key: string]: any } | null => {
+        const value = control.value;
+
+        if (!value) {
+            return null;
+        }
+
+        const isEthAddress = /0x[a-fA-F0-9]{40}/.test(value);
+        return !isEthAddress ? {malformattedAddress: value}: null;
+    }
+  }
+
+
 }
+
+
+
+
