@@ -1,4 +1,4 @@
-This is the manual token bridge. It has a multi-signature smart contract.
+This is the manual token bridge. It has a token contract with a multi-signature feature.
 It requires two out of three admins to perform the same transaction (recipient, amount) after each other to mint tokens to some recipient. For that, the front-end is to be used.
 
 ## Run locally
