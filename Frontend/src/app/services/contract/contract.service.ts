@@ -174,3 +174,8 @@ export interface AdminData {
   address: string;
   currentSignature: string;
 }
+
+
+/// todo: "no signature yet"
+
+///todo: include ae address in tx payload

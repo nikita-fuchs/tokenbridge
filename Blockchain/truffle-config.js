@@ -13,6 +13,14 @@ module.exports = {
       // you can uncomment type and use the id of other blockchains,
       // please visit the truffle documentation for more info
     },
+    dockercompose: {
+      host: "ganache",
+      port: 8545,
+      network_id: "*"
+      // type: "quorum"
+      // you can uncomment type and use the id of other blockchains,
+      // please visit the truffle documentation for more info
+    },
     rinkeby: {
       provider: () => {
         return new HDWalletProvider(mnemonic, process.env.YOUR_RINKEBY_TEST_URL
