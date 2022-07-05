@@ -3,7 +3,7 @@
   <mat-card>
     <mat-card-title toEtherscan>Contract Address</mat-card-title>
     <mat-card-subtitle>Of the bridge contract</mat-card-subtitle>
-    <p toEtherscan>{{contract.instance?.address}} </p>
+    <div class="enlargeOnHover"> <p style="float:left" toEtherscan>{{contract.instance?.address}} </p> <mat-icon class="largerIcon">open_in_new</mat-icon> </div>
     <mat-card-actions align="end">
       <!-- <button mat-button>Open on Etherscan</button> -->
     </mat-card-actions>
@@ -12,12 +12,18 @@
 <br>
 <mat-card *ngFor="let admin of contract.contractState; let i = index" >
   <mat-card-title > <ng-container  *ngIf="admin.address == this.contract.accounts[0]">  <mat-icon matSuffix>person</mat-icon> </ng-container> Admin {{ i + 1}}  <ng-container *ngIf="admin.address == this.contract.accounts[0]"> (active account) </ng-container> </mat-card-title>
-  <mat-card-subtitle toEtherscan>{{admin.address}} </mat-card-subtitle>
+  <mat-card-subtitle class="enlargeOnHover" >  
+    <p style="float:left" toEtherscan>{{admin.address}}</p> <mat-icon class="smallerIcon">open_in_new</mat-icon>  <br> <br> 
+  </mat-card-subtitle>
+ 
+  <!-- <mat-card-content class="enlargeOnHover" toEtherscan>{{admin.address}}  <mat-icon>open_in_new</mat-icon> </mat-card-content> -->
 
+  <mat-card-content>
   <div *ngIf="contract.defaultSignatures.includes(admin.currentSignature); else elseBlock"> 
     <p  style="display: inline;"> No signature found yet. </p> <mat-icon matSuffix class="rotating">cached</mat-icon> 
   </div>
   <ng-template #elseBlock> <div> Current signature: {{admin.currentSignature}} </div> </ng-template>
+</mat-card-content>
 
   <mat-card-actions align="end">
     <!-- <button mat-button>Open on Etherscan</button> -->
