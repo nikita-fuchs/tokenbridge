@@ -36,6 +36,7 @@ export class TransactionComponent implements OnInit {
       })
       .catch((error: any) => {
         console.log(error);
+        
         contract.failure(
           "Could't get the account data, please check if metamask is running correctly and refresh the page"
         );
@@ -48,16 +49,19 @@ export class TransactionComponent implements OnInit {
     });
   }
 
-  sendEth(e) {
-    console.log(e);
+  mintTokens(e) {
+    //console.log(e);
     this.address = this.transactionForm.value.sendaddress;
     this.amount = this.transactionForm.value.amount;
 
     this.contract
-      .transferEther(this.direction, this.address, this.amount)
+      .mintTokens(this.address, this.amount)
       .then((r) => {
         console.log(r);
-        this.contract.success();
+        //this.contract.success();
+        this.transactionForm.controls['amount'].setValue(null)
+        this.transactionForm.controls['sendaddress'].setValue(null)
+        this.transactionForm.markAsPristine()
       })
       .catch((e) => {
         console.log(e);

@@ -1,12 +1,14 @@
 import {Inject, Injectable} from '@angular/core';
 import { WEB3 } from '../../core/web3';
 //import contract from 'truffle-contract'; 
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 
 import Web3 from 'web3';
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { text } from '@fortawesome/fontawesome-svg-core';
+import { SnackbarMessageComponent } from 'src/app/snackbar-message/snackbar-message.component';
 
 const contract = require("@truffle/contract"); 
 
@@ -14,7 +16,11 @@ declare let require: any;
 //const tokenAbi = require('../../../../../Blockchain/build/contracts/Payment.json');
 const tokenAbi = require('../../../../../Blockchain/build/contracts/WrappedAeternity.json');
 declare let window: any;
-
+  
+enum successType {
+  minted = "minted",
+  askOtherAdmin = "askOtherAdmin"
+}
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +30,7 @@ export class ContractService {
   public accountsObservable = new Subject<string[]>();
   public compatible: boolean;
   web3Modal;
+  snackbarRef;
   web3js;
   provider;
   accounts;
@@ -45,6 +52,18 @@ export class ContractService {
   dataSource = this.contractState;
 
   constructor(@Inject(WEB3) private web3: Web3 ,private snackbar: MatSnackBar) {
+
+      
+/*     this.snackbarRef = this.snackbar.openFromComponent(SnackbarMessageComponent,
+      {
+        data: { 
+          header: "test",
+          firstLine: "123",
+          secondLine: "321",
+        },
+        duration : 10008000
+      }) */
+
     const providerOptions = {
       walletconnect: {
         package: WalletConnectProvider, // required
@@ -81,6 +100,12 @@ export class ContractService {
     paymentContract.setProvider(this.provider);
     this.instance = await paymentContract.deployed();
 
+    //deleteme
+  /*   const snackbarRef = this.snackbar.open(`test `);
+    setTimeout(() => {
+      snackbarRef.dismiss()
+    }, 3000); */
+
     // get the admins
     this.contractState[0].address = await this.instance.admin1();
     this.contractState[1].address = await this.instance.admin2();
@@ -107,43 +132,70 @@ export class ContractService {
   }
 
 
-  async transferEther(originAccount, targetAccount, amount) {
+  async mintTokens(targetAccount, amount) {
 
     return new Promise(async (resolve, reject) => {
 
     try{ 
+      let result = await this.instance.mint(targetAccount, amount, {gas: 250000/* , gasPrice: Web3.utils.toWei("50", "gwei") */, from:this.accounts[0]})
+      console.log("transaction results:", result)
 
-      let result = await this.instance.mint(targetAccount, amount, {from:this.accounts[0]})
-      console.log(result)
+      //see if the transaction was a minting, or another admin needs to be asked.
+      let minted = result.logs.find(log => log.event == "wrapped")
+
+
+      if (minted) {
+        /* this.successMessage(successType.minted, targetAccount, result.tx, amount)  */
+/*         this.snackbarRef = this.snackbar.openFromComponent(`Minted ${amount} tokens to ${targetAccount}! (tx id: ${result.tx})`, "View in Etherscan", { duration: 10000 }); */
+            this.snackbarRef = this.snackbar.openFromComponent(SnackbarMessageComponent,
+                {
+                  data: { 
+                    header: "Minting successfull !",
+                    firstLine: `Minted ${amount} tokens to `,
+                    secondLine: `${targetAccount}`,
+                    txId: result.tx,
+                    messageType: "minted",
+                    theSnackbar : this.snackbarRef
+                  },
+                  duration : 8000
+                })
+        
+/*         this.snackbarRef.afterDismissed().subscribe(() => {
+          this.goToLink(`https://etherscan.io/tx/${result.tx}`)
+        }); */
+
+/* 
+        setTimeout(() => {
+          this.snackbarRef.dismiss()
+        }, 3000); */
+
+      } else {
+/* 
+        this.snackbarRef.afterDismissed().subscribe(() => {
+          this.goToLink(`https://etherscan.io/tx/${result.tx}`)
+        }); */
+
+        this.snackbarRef = this.snackbar.openFromComponent(SnackbarMessageComponent,
+          {
+            data: { 
+              header: "Setting Signature Successful",
+              firstLine: "Now ask any of the other admins to approve ",
+              secondLine: "the same amount of tokens to this recipient",
+              txId: result.tx,
+              messageType: "signed"
+            },
+            duration : 8000
+          })
+      }
+
+
       return resolve({status: true});
       } catch(error) {
-        return reject('Error transfering Ether');
+
+        this.snackbarRef = this.snackbar.open(`Something about the transaction errored, did you pick the right wallet and reload the page?`, "View in Etherscan", { duration: 10000 })
+        return reject('Error sending mint transaction:, error');
       }
-      
-
-      
-
-      /* 
-      let finalAmount =  this.web3.utils.toBN(amount)
-      console.log("final amount;", finalAmount)
-      
-      try {
-        let status = await this.instance.newTransaction(
-          targetAccount,
-          {
-            from: originAccount[0],
-            value: this.web3.utils.toWei(finalAmount, 'ether')
-          }
-          );
-
-          if (status) {
-            return resolve({status: true});
-          }
-      } catch(error) {
-          console.log(error);
-          return reject('Error transfering Ether');
-      }
-     */});
+  });
   }
 
 
@@ -152,21 +204,29 @@ export class ContractService {
     snackbarRef.dismiss()
   }
 
-  success() {
-    const snackbarRef = this.snackbar.open('Transaction completed successfully');
-    snackbarRef.dismiss()
-    
-    async function getStaticData() {
-      // fetch the addresses of the 3 admins
-      //let result = await this.instance.admin1();
-      debugger
-    }
-    
-    function startFetchingPeriodicData() {
-      throw new Error('Function not implemented.');
-    }
+ /*    successMessage(type: successType, to: string, txId: string, amount: number) {
+      if (type == successType.minted){
+        const snackbarRef = this.snackbar.open(`Minted ${amount} tokens to ${to}! (tx id: ${txId}) `);
+        setTimeout(() => {
+          snackbarRef.dismiss()
+        }, 3000);
+      } else {
+        const snackbarRef = this.snackbar.open(`Setting signature successful. Ask another Admin to mint ${amount} tokens to ${to} to complete the minting! (tx id: ${txId}) `);
+        setTimeout(() => {
+          snackbarRef.dismiss()
+        }, 3000);
+      }
+      
+    } */
+  
+    goToLink(url: string){
+      window.open(url, "_blank");
   }
+
+
+
 }
+
 
 
 export interface AdminData {

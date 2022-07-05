@@ -15,13 +15,12 @@
   <mat-card-subtitle toEtherscan>{{admin.address}} </mat-card-subtitle>
 
   <div *ngIf="contract.defaultSignatures.includes(admin.currentSignature); else elseBlock"> 
-    <p  style="display: inline;"> Polling contract for signature..   </p> <mat-icon matSuffix class="rotating">cached</mat-icon> 
+    <p  style="display: inline;"> No signature found yet. </p> <mat-icon matSuffix class="rotating">cached</mat-icon> 
   </div>
   <ng-template #elseBlock> <div> Current signature: {{admin.currentSignature}} </div> </ng-template>
 
   <mat-card-actions align="end">
     <!-- <button mat-button>Open on Etherscan</button> -->
-    <!-- <fa-icon [icon]="[ratingEmojis.left, 'grin-squint']" size="6x" ></fa-icon> -->
   </mat-card-actions>
 </mat-card>
 <!-- <mat-card *ngFor="let admin of contract.contractState; let i = index" >
@@ -35,17 +34,17 @@
   <br>
 
     <mat-card class="textCenter account">
-        <form [formGroup]="transactionForm" (ngSubmit)="sendEth($event)">
+        <form [formGroup]="transactionForm" (ngSubmit)="mintTokens($event)">
             <mat-form-field appearance="outline">
                 <mat-label>Recipient's ETH wallet</mat-label>
-                <input matInput placeholder="Placeholder" formControlName="sendaddress">
+                <input matInput placeholder="0x123..." formControlName="sendaddress">
                 <mat-icon matSuffix>account_balance_wallet</mat-icon>
                 <mat-hint></mat-hint>
               </mat-form-field>
               &nbsp;
               <mat-form-field appearance="outline">
                 <mat-label>Amount</mat-label>
-                <input matInput type="number" min=1 placeholder="Placeholder" formControlName="amount">
+                <input matInput type="number" min=1 placeholder="0" formControlName="amount">
                 <mat-icon matSuffix>toll</mat-icon>
                 <mat-hint></mat-hint>
               </mat-form-field>
@@ -62,7 +61,7 @@
 
         &nbsp;
         <div class="button-container">
-          <button mat-raised-button color="accent" [disabled]="!transactionForm.valid" (click)="sendEth($event)"><mat-icon *ngIf="!transactionForm.valid">lock</mat-icon><mat-icon *ngIf="transactionForm.valid">input</mat-icon>&nbsp;Send Transaction</button>
+          <button mat-raised-button color="accent" [disabled]="!transactionForm.valid" (click)="mintTokens($event)"><mat-icon *ngIf="!transactionForm.valid">lock</mat-icon><mat-icon *ngIf="transactionForm.valid">input</mat-icon>&nbsp;Send Transaction</button>
           &nbsp;
         </div>
         &nbsp;

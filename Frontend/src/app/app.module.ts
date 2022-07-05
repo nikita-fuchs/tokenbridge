@@ -20,11 +20,13 @@ import {
   faSquare,
   faCheckSquare as farCheckSquare,
 } from '@fortawesome/free-regular-svg-icons';
+import { SnackbarMessageComponent } from './snackbar-message/snackbar-message.component';
 @NgModule({
   declarations: [
     AppComponent,
     ToEtherscanDirective,
-    EtherscanDirective
+    EtherscanDirective,
+    SnackbarMessageComponent
   ],
   imports: [
     AppRoutingModule,
@@ -41,7 +43,7 @@ import {
     MatTableModule,
     MatSortModule,
   ],
-  providers: [],
+  providers: [{ provide: Window, useValue: window }],
   bootstrap: [AppComponent]
 })
 export class AppModule {
