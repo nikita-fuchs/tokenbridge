@@ -53,15 +53,19 @@ export class ContractService {
   constructor(@Inject(WEB3) private web3: Web3 ,private snackbar: MatSnackBar) {
 
       
-/*     this.snackbarRef = this.snackbar.openFromComponent(SnackbarMessageComponent,
+    this.snackbarRef = this.snackbar.openFromComponent(SnackbarMessageComponent,
       {
         data: { 
-          header: "test",
-          firstLine: "123",
-          secondLine: "321",
+          header: "Minting successfull !",
+          firstLine: `Minted 1337 tokens to `,
+          secondLine: `0xa152F8bb749c55E9943A3a0A3111D18ee2B3f94E`,
+          txId: '0xa152F8bb749c55E9943A3a0A3111D18ee2B3f94E',
+          messageType: "minted",
+          theSnackbar : this.snackbarRef
         },
-        duration : 10008000
-      }) */
+        duration : 8000000
+      })
+
 
     const providerOptions = {
       walletconnect: {

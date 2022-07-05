@@ -1,6 +1,5 @@
-<b> {{ data.header }} </b> 
-<br> 
-{{ data.firstLine }} 
-<br> 
-{{ data.secondLine }} 
+<b> <p> {{ data.header }} </p>  </b> 
+<p> {{ data.firstLine }} </p>
+
+<p> {{ data.secondLine }} </p> 
 <button mat-button style="float: right" (click)="navigateTo('https://etherscan.io/tx/' + data.txId)">Open on Etherscan</button>
