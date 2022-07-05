@@ -52,8 +52,8 @@ export class ContractService {
 
   constructor(@Inject(WEB3) private web3: Web3 ,private snackbar: MatSnackBar) {
 
-      
-    this.snackbarRef = this.snackbar.openFromComponent(SnackbarMessageComponent,
+      // for testing/debugging the snackbar
+  /*   this.snackbarRef = this.snackbar.openFromComponent(SnackbarMessageComponent,
       {
         data: { 
           header: "Minting successfull !",
@@ -64,7 +64,7 @@ export class ContractService {
           theSnackbar : this.snackbarRef
         },
         duration : 8000000
-      })
+      }) */
 
 
     const providerOptions = {
