@@ -7,7 +7,6 @@ import { Subject } from 'rxjs';
 import Web3 from 'web3';
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { text } from '@fortawesome/fontawesome-svg-core';
 import { SnackbarMessageComponent } from 'src/app/snackbar-message/snackbar-message.component';
 
 const contract = require("@truffle/contract"); 

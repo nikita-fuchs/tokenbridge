@@ -10,16 +10,6 @@ import { ToEtherscanDirective } from './to-etherscan.directive';
 import { EtherscanDirective } from './etherscan.directive';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'  
 import { MatSortModule } from '@angular/material/sort/';
-
-import {
-  FontAwesomeModule,
-  FaIconLibrary,
-} from '@fortawesome/angular-fontawesome';
-//import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
-import {
-  faSquare,
-  faCheckSquare as farCheckSquare,
-} from '@fortawesome/free-regular-svg-icons';
 import { SnackbarMessageComponent } from './snackbar-message/snackbar-message.component';
 @NgModule({
   declarations: [
@@ -47,12 +37,5 @@ import { SnackbarMessageComponent } from './snackbar-message/snackbar-message.co
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(library: FaIconLibrary) {
-    // Add multiple icons to the library
-    //@ts-ignore
-    library.addIcons(  faSquare/* ,
-      faCheckSquare,
-      farSquare,
-      farCheckSquare, */);
-  }
+  constructor() {}
  }
