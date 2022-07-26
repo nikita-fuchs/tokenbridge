@@ -42,7 +42,7 @@ contract WrappedAeternity is ERC20, ERC20Burnable {
         require (msg.sender == admin1 || msg.sender == admin2 || msg.sender == admin3);
         // if yes, store his msg.data. 
         multiSigHashes[msg.sender] = keccak256(msg.data);
-        // check if all three stored msg.data hash equals to the one of the other admins
+        // check if any two stored msg.data hashes equal
         if (
             (multiSigHashes[admin1] == multiSigHashes[admin2]) 
             ||
@@ -50,7 +50,7 @@ contract WrappedAeternity is ERC20, ERC20Burnable {
             ||
             (multiSigHashes[admin1] == multiSigHashes[admin3])
            ) {
-            // if yes, all three admins agreed - continue.
+            // if yes, two out of three admins - continue.
             _;
 
             // Reset hashes after successful execution
