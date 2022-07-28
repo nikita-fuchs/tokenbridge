@@ -25,7 +25,6 @@ frontend_1  | ✔ Compiled successfully.` the  dApp was successfully built
 9. if two admin accounts did a transaction with the same values after each other, the recipient will have received newly minted tokens and the signatures will be reset.
 
 # TODO:
-- add visual confirmation for successful minting.
 - consider adding recipient's wallet address as transaction parameter, to be logged in the `mint` event in the contract.
 - add a form field to check account balances, for easier verification.
 
