@@ -38,12 +38,14 @@ export class ContractService {
   sigFetchInterval // interval for fetching signatures - one might want to clear it later maybe.
   defaultSignatures : string[] = ['0x41b1a0649752af1b28b3dc29a1556eee781e4a4c3a1f7f53f90fa834de098c4d',
                                 '0x435cd288e3694b535549c3af56ad805c149f92961bf84a1c647f7d86fc2431b4',
-                                '0xf2d05ec5c5729fb559780c70a93ca7b4ee2ca37f64e62fa31046b324f60d9447'] // the default signatures. introduced so signatures don't match right away after contract deployment.
+                                '0xf2d05ec5c5729fb559780c70a93ca7b4ee2ca37f64e62fa31046b324f60d9447',
+                                '0x997997d543f68c7b77e62a13efc6e546bd2a81c2aa8769c3354422ebbbb4fba4'] // the default signatures. introduced so signatures don't match right away after contract deployment.
 
   contractState : AdminData[] = [
     {position: 1, address: '', currentSignature: ''},
     {position: 2, address: '', currentSignature: ''},
     {position: 3, address: '', currentSignature: ''},
+    {position: 4, address: '', currentSignature: ''},
   ]
 
 
@@ -113,16 +115,19 @@ export class ContractService {
     this.contractState[0].address = await this.instance.admin1();
     this.contractState[1].address = await this.instance.admin2();
     this.contractState[2].address = await this.instance.admin3();
+    this.contractState[3].address = await this.instance.admin4();
 
     //get the signatures
     this.contractState[0].currentSignature = await this.instance.multiSigHashes(this.contractState[0].address);
     this.contractState[1].currentSignature = await this.instance.multiSigHashes(this.contractState[1].address);
     this.contractState[2].currentSignature = await this.instance.multiSigHashes(this.contractState[2].address);
+    this.contractState[3].currentSignature = await this.instance.multiSigHashes(this.contractState[3].address);
     
     this.sigFetchInterval = setInterval(async () => {
       this.contractState[0].currentSignature = await this.instance.multiSigHashes(this.contractState[0].address);
       this.contractState[1].currentSignature = await this.instance.multiSigHashes(this.contractState[1].address);
       this.contractState[2].currentSignature = await this.instance.multiSigHashes(this.contractState[2].address);
+      this.contractState[3].currentSignature = await this.instance.multiSigHashes(this.contractState[3].address);
     }, 5000) 
 
     return this.accounts;

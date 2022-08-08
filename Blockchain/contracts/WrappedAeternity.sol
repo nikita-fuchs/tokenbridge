@@ -6,24 +6,27 @@ import "../node_modules/@OpenZeppelin/contracts/token/ERC20/extensions/ERC20Burn
 
 /// @custom:security-contact info@aeternity.org
 contract WrappedAeternity is ERC20, ERC20Burnable {
-    constructor(address _admin1, address _admin2, address _admin3) ERC20("Wrapped Aeternity", "WAE") {
+    constructor(address _admin1, address _admin2, address _admin3, address _admin4) ERC20("Wrapped Aeternity", "WAE") {
 
         
         // make sure the addresses are unique
         require(_admin1 != _admin2);
         require(_admin2 != _admin3);
         require(_admin1 != _admin3);
+        require(_admin1 != _admin4);
 
         require(_admin1 != address(0x0));
         require(_admin2 != address(0x0));
         require(_admin3 != address(0x0));
+        require(_admin4 != address(0x0));
         
                 //set admins
         admin1 = _admin1;
         admin2 = _admin2;
         admin3 = _admin3;
+        admin4 = _admin4;
 
-        // set bogus initial signatures, so multisig works properly;
+        // set bogus initial signatures, so multisig works properly and e.g. empty signatures don't accidentally match;
         cleanupSignatures();
     }
 
@@ -33,24 +36,44 @@ contract WrappedAeternity is ERC20, ERC20Burnable {
     address public admin1;
     address public admin2;
     address public admin3;
+    address public admin4;
 
     modifier multiSigRequired(uint256 amount) {
         // check amount
         require (amount > 0, "token amount is zero");
 
         // check if transaction sender is admin.
-        require (msg.sender == admin1 || msg.sender == admin2 || msg.sender == admin3);
+        require (msg.sender == admin1 || msg.sender == admin2 || msg.sender == admin3 || msg.sender == admin4);
         // if yes, store his msg.data. 
         multiSigHashes[msg.sender] = keccak256(msg.data);
-        // check if all three stored msg.data hash equals to the one of the other admins
+        // perform a check whether any 2 of the 4 admin's hashes are the same. The minimal required amount of checks 
+        // can be taken from this logic table. The idea is that we don't check e.g. admin3 and admin 1's hash, if this check
+        // was performed beforehand already. here are the checks we perform: 
+        // ╔═══╦═══╦═══╦═══╦═══╗
+        // ║   ║ 1 ║ 2 ║ 3 ║ 4 ║
+        // ╠═══╬═══╬═══╬═══╬═══╣
+        // ║ 1 ║ ■ ║ ✓ ║ ✓ ║ ✓ ║
+        // ╠═══╬═══╬═══╬═══╬═══╣
+        // ║ 2 ║ ■ ║ ■ ║ ✓ ║ ✓ ║
+        // ╠═══╬═══╬═══╬═══╬═══╣
+        // ║ 3 ║ ■ ║ ■ ║ ■ ║ ✓ ║
+        // ╠═══╬═══╬═══╬═══╬═══╣
+        // ║ 4 ║ ■ ║ ■ ║ ■ ║ ■ ║
+        // ╚═══╩═══╩═══╩═══╩═══╝
         if (
             (multiSigHashes[admin1] == multiSigHashes[admin2]) 
             ||
+            (multiSigHashes[admin1] == multiSigHashes[admin3])
+            ||
+            (multiSigHashes[admin1] == multiSigHashes[admin4])
+            ||
             (multiSigHashes[admin2] == multiSigHashes[admin3])
             ||
-            (multiSigHashes[admin1] == multiSigHashes[admin3])
+            (multiSigHashes[admin2] == multiSigHashes[admin4])
+            ||
+            (multiSigHashes[admin3] == multiSigHashes[admin4])
            ) {
-            // if yes, all three admins agreed - continue.
+            // if yes, two out of four - continue.
             _;
 
             // Reset hashes after successful execution
@@ -66,11 +89,11 @@ contract WrappedAeternity is ERC20, ERC20Burnable {
         emit wrapped(_amount, _to);
     }
 
-    //deleteme
     function cleanupSignatures() private {
         multiSigHashes[admin1] = keccak256("foo");
         multiSigHashes[admin2] = keccak256("bar");
         multiSigHashes[admin3] = keccak256("baz");
+        multiSigHashes[admin4] = keccak256("etc");
     }
 
     // explicitly convert address to bytes for the hashing function. 
