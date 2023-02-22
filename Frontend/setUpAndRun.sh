@@ -1,5 +1,5 @@
 #!/bin/sh
-export NODE_OPTIONS=--openssl-legacy-provider
+#export NODE_OPTIONS=--openssl-legacy-provider
 cd /app/Blockchain 
 npx truffle compile &&
 truffle migrate --reset --network dockercompose && 

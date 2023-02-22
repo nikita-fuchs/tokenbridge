@@ -15792,10 +15792,22 @@
       "links": {},
       "address": "0x49F6155Ae15C467F6CA11d38E3D02AB8CA97315C",
       "transactionHash": "0x59337a9d4a07169c50b10d156007992510a05f722a292eff0c46739284c81533"
+    },
+    "1677064828437": {
+      "events": {},
+      "links": {},
+      "address": "0x49F6155Ae15C467F6CA11d38E3D02AB8CA97315C",
+      "transactionHash": "0x59337a9d4a07169c50b10d156007992510a05f722a292eff0c46739284c81533"
+    },
+    "1677065358320": {
+      "events": {},
+      "links": {},
+      "address": "0x49F6155Ae15C467F6CA11d38E3D02AB8CA97315C",
+      "transactionHash": "0x59337a9d4a07169c50b10d156007992510a05f722a292eff0c46739284c81533"
     }
   },
-  "schemaVersion": "3.4.7",
-  "updatedAt": "2022-08-08T11:34:01.852Z",
+  "schemaVersion": "3.4.12",
+  "updatedAt": "2023-02-22T11:29:55.250Z",
   "networkType": "ethereum",
   "devdoc": {
     "custom:security-contact": "info@aeternity.org",
